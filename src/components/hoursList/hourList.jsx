@@ -9,7 +9,6 @@ const HoursList = (props) => {
   );
   const [hour, setHour] = useState(Number(props.hour));
   useEffect(() => {
-    console.log(props, hour);
   }, [props]);
   return (
     <div className="HoursList">
