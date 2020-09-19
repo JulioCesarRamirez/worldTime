@@ -19,10 +19,9 @@ const CityList = (props) => {
     if (!placeTime) {
       return "";
     }
-
     const time = moment.tz(placeTime.datetime, placeTime.timezone);
 
-    return time.format("hh:mm A");
+    return `${time.format("hh:mm A")} ${placeTime.abbreviation}`;
   };
   const getFormatDate = (date) => {
     const [year, month, day] = date.split("-");
