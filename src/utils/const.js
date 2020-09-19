@@ -1,5 +1,5 @@
 export const DAYS = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
-export const MOTHS = [
+export const MONTHS = [
   "January",
   "February",
   "March",

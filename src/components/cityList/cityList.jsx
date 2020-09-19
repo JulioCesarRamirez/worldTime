@@ -4,7 +4,7 @@ import { BiHome } from "react-icons/bi";
 import { BsTrash } from "react-icons/bs";
 import moment from "moment-timezone";
 
-import { DAYS, MOTHS } from "../../utils/const";
+import { DAYS, MONTHS } from "../../utils/const";
 import HoursList from "../hoursList/hourList";
 import "./cityList.scss";
 
@@ -19,27 +19,27 @@ const CityList = (props) => {
     if (!placeTime) {
       return "";
     }
+
     const time = moment.tz(placeTime.datetime, placeTime.timezone);
 
     return time.format("hh:mm A");
   };
-  const getDate = (dateTime) => {
-    if (!dateTime) {
-      return "";
-    }
-    const date = new Date(dateTime);
+  const getFormatDate = (date) => {
+    const [ year, month, day ] = date.split('-')
+    const d = new Date(year, (+month - 1), day)
+    const dateFormated =  `${DAYS[d.getDay()]}, ${
+      MONTHS[+month - 1]
+    } ${day}`;
 
-    return `${DAYS[date.getDay()]}, ${
-      MOTHS[date.getMonth()]
-    } ${date.getDate()}`;
+    let nextDay = new Date(d)
+    nextDay.setDate(d.getDate() + 1)
+    const formatedNextDate = {month: MONTHS[nextDay.getMonth()], day: nextDay.getDate()}
+
+    return {dateFormated, formatedNextDate}
   };
 
-  const getContinent = (timezone) => {
-    return timezone ? timezone.split("/")[0] : "";
-  };
-
-  const getCity = (timezone) => {
-    return timezone ? timezone.split("/")[1].replace("_", " ") : "";
+  const getContinentAndCity = (timezone) => {
+    return timezone?.split('/').map(zone => zone.replace('_', ' ')) || '';
   };
 
   const removeItem = (item) => {
@@ -48,11 +48,22 @@ const CityList = (props) => {
   };
 
   const calcDiff = (localTime, comparedTime) => {
-    const local = moment.tz(localTime.datetime, localTime.timezone);
-    const otheTime = local.clone().tz(comparedTime.timezone);
-    const diff = otheTime.format("HH") - local.format("HH");
-    return diff < 0 ? diff : `+${diff}`;
+    const local = moment.tz(localTime.datetime, localTime.timezone)
+    const otherTime = moment.tz(comparedTime.datetime, comparedTime.timezone)
+    const [ date ] = otherTime._i.split(/[T|.]/)
+    const {dateFormated, formatedNextDate} = getFormatDate(date)
+    const diff = Math.trunc((otherTime._d.getTime() - local._d.getTime()) / 3600000)
+    const difference = diff > 0 ? `+${diff}` : diff
+
+    return { difference, dateFormated, formatedNextDate }
   };
+
+  const getTimeData = (local, foreign) => {
+    const {difference, dateFormated, formatedNextDate} = calcDiff(local, foreign)
+    const [continent, city ] = getContinentAndCity(foreign.timezone)
+
+    return { difference, city, continent, dateFormated, formatedNextDate}
+  }
 
   return (
     <div className="CityList">
@@ -60,6 +71,8 @@ const CityList = (props) => {
         <Table striped hover>
           <tbody>
             {timeList.map((placeTime, i) => {
+              const { difference, city, continent , dateFormated, formatedNextDate} = getTimeData(timeList[0], placeTime)
+
               return (
                 <tr key={i}>
                   <td className="CityList-icon">
@@ -75,19 +88,19 @@ const CityList = (props) => {
                     {i === 0 ? (
                       <BiHome />
                     ) : (
-                      <p>{calcDiff(timeList[0], placeTime)}</p>
+                      <p>{difference}</p>
                     )}
                   </td>
                   <td>
-                    <h6>{getContinent(placeTime.timezone)}</h6>
-                    <p>{getCity(placeTime.timezone)}</p>
+                    <h6>{continent}</h6>
+                    <p>{city}</p>
                   </td>
                   <td>
                     <h6>{getTime(placeTime)}</h6>
-                    <p>{getDate(placeTime.datetime)}</p>
+                    <p>{dateFormated}</p>
                   </td>
                   <td className="CityList-scroll-x">
-                    <HoursList hour={moment.tz(placeTime.datetime, placeTime.timezone).format("HH")}/>
+                    <HoursList hour={moment.tz(placeTime.datetime, placeTime.timezone).format("HH")} nextDay={formatedNextDate}/>
                   </td>
                 </tr>
               );
@@ -95,6 +108,7 @@ const CityList = (props) => {
           </tbody>
         </Table>
       )}
+      <div className="selected"></div>
     </div>
   );
 };

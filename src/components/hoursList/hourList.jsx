@@ -1,27 +1,35 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import "./hoursList.scss";
 
 const HoursList = (props) => {
-  const [hours, setHours] = useState(
-    Array(24 - 0)
-      .fill()
-      .map((item, index) => 1 + index)
-  );
-  const [hour, setHour] = useState(Number(props.hour));
-  useEffect(() => {
-  }, [props]);
+  const { hour, nextDay } = props;
+
+  let items = [],
+    className = "currentday";
+
+  for (let i = hour - 1; i <= +hour + 24; i++) {
+    if (i === 24) {
+      className = "nextday";
+      items.push(
+        <li key={i} className={`${className} first`}>
+          <h6>{nextDay.month}</h6>
+          <p>{nextDay.day}</p>
+        </li>
+      );
+    } else
+      items.push(
+        <li
+          key={i}
+          className={`${className} ${+i === +hour ? "HoursList-active" : ""}`}
+        >
+          <h6>{i % 12 || 12}</h6>
+          <p>{i < 12 || i === 24 ? "a.m." : "p.m."}</p>
+        </li>
+      );
+  }
   return (
     <div className="HoursList">
-      <ul>
-        {hours.map((h) => {
-          return (
-            <li key={h} className={h === hour? "HoursList-active" : ""}>
-              <h6>{h}</h6>
-              <p>{h < 12 ? "am" : "pm"}</p>
-            </li>
-          );
-        })}
-      </ul>
+      <ul>{items}</ul>
     </div>
   );
 };
