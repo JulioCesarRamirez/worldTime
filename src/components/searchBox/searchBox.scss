@@ -5,9 +5,10 @@
   input {
     border-radius: 4rem;
     border: none;
-    width: 15rem;
-    padding-left: 1rem;
-    background-color: #e9ecef;
+    width: 22rem;
+    padding: 5px  0 5px 1rem;
+    background-color: #f5f6f7;
+
     &:focus {
       outline: none;
     }
@@ -15,19 +16,39 @@
   ul {
     margin-top: 1rem;
     padding-left: 0.5rem;
+    position: absolute;
+    max-height: 400px;
+    min-height: 80px;
+    width: 22rem;
+    float: left;
+    left: 12px;
+    top: 28px;
+    overflow-y: auto;
+    overflow-x: hidden;
+    background-color: #ffffff;
+    z-index: 1;
+
     li {
-      display: block;
-     button{
-       background-color: white;
-       border: none;
-       &:hover{
-         color: #fb5607;
-         opacity: 0.5;
-       }
-       &:focus {
-        outline: none;
+      min-height: 40px;
+      cursor: pointer;
+      display: flex;
+      padding: 6px 0px 0px 10px;
+
+      &:hover{
+        background-color: #d0cccc;
       }
-     }
+
+      button {
+        background-color: #ffffff;
+        border: none;
+        &:hover{
+          color: #fb5607;
+          opacity: 0.5;
+        }
+        &:focus {
+          outline: none;
+        }
+      }
     }
   }
 }

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Table } from "react-bootstrap";
+import { Row, Col } from "react-bootstrap";
 import { BiHome } from "react-icons/bi";
 import { BsTrash } from "react-icons/bs";
 import moment from "moment-timezone";
@@ -25,21 +25,22 @@ const CityList = (props) => {
     return time.format("hh:mm A");
   };
   const getFormatDate = (date) => {
-    const [ year, month, day ] = date.split('-')
-    const d = new Date(year, (+month - 1), day)
-    const dateFormated =  `${DAYS[d.getDay()]}, ${
-      MONTHS[+month - 1]
-    } ${day}`;
+    const [year, month, day] = date.split("-");
+    const d = new Date(year, +month - 1, day);
+    const dateFormated = `${DAYS[d.getDay()]}, ${MONTHS[+month - 1]} ${day}`;
 
-    let nextDay = new Date(d)
-    nextDay.setDate(d.getDate() + 1)
-    const formatedNextDate = {month: MONTHS[nextDay.getMonth()], day: nextDay.getDate()}
+    let nextDay = new Date(d);
+    nextDay.setDate(d.getDate() + 1);
+    const formatedNextDate = {
+      month: MONTHS[nextDay.getMonth()],
+      day: nextDay.getDate(),
+    };
 
-    return {dateFormated, formatedNextDate}
+    return { dateFormated, formatedNextDate };
   };
 
   const getContinentAndCity = (timezone) => {
-    return timezone?.split('/').map(zone => zone.replace('_', ' ')) || '';
+    return timezone?.split("/").map((zone) => zone.replace("_", " ")) || "";
   };
 
   const removeItem = (item) => {
@@ -48,66 +49,70 @@ const CityList = (props) => {
   };
 
   const calcDiff = (localTime, comparedTime) => {
-    const local = moment.tz(localTime.datetime, localTime.timezone)
-    const otherTime = moment.tz(comparedTime.datetime, comparedTime.timezone)
-    const [ date ] = otherTime._i.split(/[T|.]/)
-    const {dateFormated, formatedNextDate} = getFormatDate(date)
-    const diff = Math.trunc((otherTime._d.getTime() - local._d.getTime()) / 3600000)
-    const difference = diff > 0 ? `+${diff}` : diff
+    const local = moment.tz(localTime.datetime, localTime.timezone);
+    const otherTime = moment.tz(comparedTime.datetime, comparedTime.timezone);
+    const [date] = otherTime._i?.split(/[T|.]/);
+    const { dateFormated, formatedNextDate } = getFormatDate(date);
+    const diff = Math.round(
+      (otherTime._d.getTime() - local._d.getTime()) / 3600000
+    );
+    const difference = diff > 0 ? `+${diff}` : diff;
 
-    return { difference, dateFormated, formatedNextDate }
+    return { difference, dateFormated, formatedNextDate };
   };
 
   const getTimeData = (local, foreign) => {
-    const {difference, dateFormated, formatedNextDate} = calcDiff(local, foreign)
-    const [continent, city ] = getContinentAndCity(foreign.timezone)
+    const { difference, dateFormated, formatedNextDate } = calcDiff(
+      local,
+      foreign
+    );
+    const [continent, city] = getContinentAndCity(foreign.timezone);
 
-    return { difference, city, continent, dateFormated, formatedNextDate}
-  }
+    return { difference, city, continent, dateFormated, formatedNextDate };
+  };
 
   return (
     <div className="CityList">
-      {timeList.length > 0 && (
-        <Table striped hover>
-          <tbody>
-            {timeList.map((placeTime, i) => {
-              const { difference, city, continent , dateFormated, formatedNextDate} = getTimeData(timeList[0], placeTime)
+      {timeList.length > 0 &&
+        timeList.map((placeTime, key) => {
+          const {
+            difference,
+            continent,
+            city,
+            dateFormated,
+            formatedNextDate,
+          } = getTimeData(timeList[0], placeTime);
 
-              return (
-                <tr key={i}>
-                  <td className="CityList-icon">
-                    <button
-                      onClick={() => {
-                        removeItem(placeTime);
-                      }}
-                    >
-                      <BsTrash />
-                    </button>
-                  </td>
-                  <td className="CityList-icon">
-                    {i === 0 ? (
-                      <BiHome />
-                    ) : (
-                      <p>{difference}</p>
-                    )}
-                  </td>
-                  <td>
-                    <h6>{continent}</h6>
-                    <p>{city}</p>
-                  </td>
-                  <td>
-                    <h6>{getTime(placeTime)}</h6>
-                    <p>{dateFormated}</p>
-                  </td>
-                  <td className="CityList-scroll-x">
-                    <HoursList hour={moment.tz(placeTime.datetime, placeTime.timezone).format("HH")} nextDay={formatedNextDate}/>
-                  </td>
-                </tr>
-              );
-            })}
-          </tbody>
-        </Table>
-      )}
+          return (
+            <Row className="col-md-12" key={key}>
+              <Col className="col-md-1 align-self-center">
+                <BsTrash
+                  className="BsTrash"
+                  onClick={() => removeItem(placeTime)}
+                />
+              </Col>
+              <Col className="col-md-1 align-self-center">
+                {(key && <p>{difference}</p>) || <BiHome />}
+              </Col>
+              <Col className="col-md-1 align-self-center">
+                <h6>{continent}</h6>
+                <p>{city}</p>
+              </Col>
+              <Col className="col-md-1 align-self-center">
+                <h6>{getTime(placeTime)}</h6>
+                <p>{dateFormated}</p>
+              </Col>
+              <Col className="col-md-8 align-self-center">
+                <HoursList
+                  hour={moment
+                    .tz(placeTime.datetime, placeTime.timezone)
+                    .format("HH")}
+                  nextDay={formatedNextDate}
+                />
+              </Col>
+            </Row>
+          );
+        })}
       <div className="selected"></div>
     </div>
   );
