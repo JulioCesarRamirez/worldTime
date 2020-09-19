@@ -93,15 +93,15 @@ const CityList = (props) => {
               <Col className="col-md-1 align-self-center">
                 {(key && <p>{difference}</p>) || <BiHome />}
               </Col>
-              <Col className="col-md-1 align-self-center">
+              <Col className="col-md-2 align-self-center">
                 <h6>{continent}</h6>
                 <p>{city}</p>
               </Col>
-              <Col className="col-md-1 align-self-center">
+              <Col className="col-md-2 align-self-center">
                 <h6>{getTime(placeTime)}</h6>
                 <p>{dateFormated}</p>
               </Col>
-              <Col className="col-md-8 align-self-center">
+              <Col className="col-md-6 align-self-center">
                 <HoursList
                   hour={moment
                     .tz(placeTime.datetime, placeTime.timezone)
