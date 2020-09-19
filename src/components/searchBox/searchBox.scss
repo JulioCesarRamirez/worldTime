@@ -1,0 +1,33 @@
+.SearcBox {
+  margin-top: 1rem;
+  margin-bottom: 1rem;
+
+  input {
+    border-radius: 4rem;
+    border: none;
+    width: 15rem;
+    padding-left: 1rem;
+    background-color: #e9ecef;
+    &:focus {
+      outline: none;
+    }
+  }
+  ul {
+    margin-top: 1rem;
+    padding-left: 0.5rem;
+    li {
+      display: block;
+     button{
+       background-color: white;
+       border: none;
+       &:hover{
+         color: #fb5607;
+         opacity: 0.5;
+       }
+       &:focus {
+        outline: none;
+      }
+     }
+    }
+  }
+}
