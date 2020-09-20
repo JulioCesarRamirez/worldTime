@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Row, Col } from "react-bootstrap";
-import { BiHome } from "react-icons/bi";
+import { BiHome, BiHomeSmile } from "react-icons/bi";
 import { BsTrash } from "react-icons/bs";
 import moment from "moment-timezone";
 
@@ -70,6 +70,14 @@ const CityList = (props) => {
     return { difference, city, continent, dateFormated, formatedNextDate };
   };
 
+  const setHome = (item) => {
+    const newHome = { ...item };
+    const newList = timeList.filter(
+      (place) => place.timezone !== item.timezone
+    );
+    setTimeList([newHome, ...newList]);
+  };
+
   return (
     <div className="CityList">
       {timeList.length > 0 &&
@@ -91,7 +99,15 @@ const CityList = (props) => {
                 />
               </Col>
               <Col className="col-md-1 align-self-center">
-                {(key && <p>{difference}</p>) || <BiHome />}
+                {(key && (
+                  <button
+                    className="CityList-setHome"
+                    data-tooltip="Click me! To be home time"
+                    onClick={() => setHome(placeTime)}
+                  >
+                    <BiHomeSmile className="NewHome" /> <p>{difference}</p>
+                  </button>
+                )) || <BiHome />}
               </Col>
               <Col className="col-md-2 align-self-center">
                 <h6>{continent}</h6>
