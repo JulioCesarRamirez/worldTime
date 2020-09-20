@@ -39,30 +39,21 @@ You don’t have to ever use `eject`. The curated feature set is suitable for sm
 
 ## Learn More
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+This project has four component such as:
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+- Container: the job of this component works as container and it is the one who make the api calls and receives the data emitted by searchBox component, to pass this data to cityList.
+- SearchBox: this is the one who has the input to specify the city.
+- CityList: this component takes the city inputed by the user and add it to a list where the user can see the comparison between your current time with others.
+- Hourlist: this component shows the list of hour available based on its city. 
 
-### Code Splitting
 
-This section has moved here: https://facebook.github.io/create-react-app/docs/code-splitting
-
-### Analyzing the Bundle Size
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size
-
-### Making a Progressive Web App
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app
-
-### Advanced Configuration
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/advanced-configuration
-
-### Deployment
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/deployment
-
-### `npm run build` fails to minify
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify
+What would you add or remove from this component to make it better?
+Use this app with redux to make a better code practices, to pass information between the components using the store who Redux provides.
+What would be the best way to make it reusable/embeddable?
+In the way that I developed, each component are connected, and each one has its own job.
+Assuming you have enough time, what would it take to be production-ready?
+- Handle the api errors based on the error sent by the API. 
+- Use google places API for the autocomplete.
+If you didn't have access to the World Time API, how would you design the backend?
+- Use an open source API who help me with the timezone. 
+- Another option could be create an API who response the time as the API did using UTC time and converting it with moment library to change the time. 
